@@ -2,13 +2,13 @@
 
 # Repositório para documentação dos trabalhos
 
-**Disciplina:** N885-27 — Sistemas Inteligentes
+**Disciplina:** N885-27 — Aplicação em Sistemas Inteligentes
 
 **Professor:** Joel Sotero da Cunha Neto
 
 ## Objetivo
 
-Este repositório contém toda a documentação referente ao projeto aplicado na disciplina de **Sistemas Inteligentes**.
+Este repositório contém toda a documentação referente ao projeto aplicado na disciplina de **Aplicação em Sistemas Inteligentes**.
 
 ## Equipe
 
