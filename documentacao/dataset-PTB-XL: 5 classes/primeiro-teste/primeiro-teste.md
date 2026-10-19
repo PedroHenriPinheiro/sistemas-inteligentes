@@ -16,7 +16,7 @@ Subconjunto balanceado de imagens de ECG derivado do dataset baseado no PTB-XL.
 
 ### Distribuição dos dados (t-SNE)
 
-![t-SNE dos 2.000 exemplos de treino](docs/tsne.png)
+![t-SNE dos 2.000 exemplos de treino](imagens/Captura%20de%20tela%20de%202026-10-19%2013-55-50.png)
 
 Parâmetros: normalização + PCA com 20 componentes, inicialização PCA, distância euclidiana, perplexidade 30.
 
@@ -26,7 +26,7 @@ O t-SNE não mostra agrupamentos por classe: CD, HYP, MI, NORM e STTC aparecem m
 
 Métricas médias sobre as 5 classes, geradas pelo widget Predictions do Orange, ordenadas por AUC.
 
-![Predictions — Orange](docs/predictions.png)
+![Predictions — Orange](imagens/Captura%20de%20tela%20de%202026-10-19%2013-53-21.png)
 
 | # | Modelo | AUC | CA | F1 | Prec | Recall | MCC |
 | --- | --- | --- | --- | --- | --- | --- | --- |
