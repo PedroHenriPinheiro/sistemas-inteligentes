@@ -1,7 +1,3 @@
-from pathlib import Path
-
-readme = r"""# Atividade Prática 2 — Organização do Dataset e Planejamento dos Experimentos
-
 **Disciplina:** Aplicações em Sistemas Inteligentes  
 **Entrega:** 1ª entrega — 20/10/2026  
 **Integrantes:** Nycaio Bezerra (2220230) e Pedro Henrique (2420509)
@@ -186,6 +182,3 @@ transformacoes.py
 
 > **Observação:** este README documenta a primeira entrega e os resultados parciais apresentados nela. Os experimentos seguintes ainda serão executados e comparados com o baseline.
 """
-path = Path("/mnt/data/README.md")
-path.write_text(readme, encoding="utf-8")
-print(f"README criado: {path}")
