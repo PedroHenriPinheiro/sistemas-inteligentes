@@ -41,8 +41,12 @@ Avaliar o desempenho da arquitetura **VGG16** na classificação de sinais de EC
 
 | Transformação | Parâmetros |
 |---|---|
-| _a preencher_ | _a preencher_ |
-| _a preencher_ | _a preencher_ |
+| `Resize` | 224 × 224 |
+| `RandomAffine` | `degrees=0`, `translate=(0.02, 0.02)`, `fill=(255, 255, 255)` (translação de até 2% em cada eixo; áreas novas em branco) |
+| `ColorJitter` | `brightness=0.1` |
+| `ToTensor` + `Normalize` | média `[0.485, 0.456, 0.406]`, desvio `[0.229, 0.224, 0.225]` |
+
+**Regras adotadas para imagens de ECG (padronizadas na equipe):** sem *flip* horizontal ou vertical (inverteria o tempo e a polaridade das ondas); sem rotações grandes ou recortes agressivos (alterariam derivações e intervalos RR); áreas novas preenchidas com branco; augmentation aplicado **somente no treino**. Validação e teste usam apenas `Resize` + `ToTensor` + `Normalize`.
 
 ### Informações a completar
 
@@ -50,7 +54,6 @@ Avaliar o desempenho da arquitetura **VGG16** na classificação de sinais de EC
 |---|---|
 | Dataset e significado das siglas das classes | _a preencher_ |
 | Tamanho do conjunto de treino | _a preencher_ |
-| Tamanho da imagem de entrada | _a preencher_ |
 | Pesos iniciais (ImageNet ou aleatórios) | _a preencher_ |
 | Otimizador e *learning rate* | _a preencher_ |
 | Batch size | _a preencher_ |
@@ -160,7 +163,7 @@ A acurácia de teste (72,26%) é muito próxima da de validação (71,78%), o qu
 - O early stopping encerrou o treino na época 23, 10 épocas depois do melhor resultado (época 13). A melhor loss de validação passou por três marcos (épocas 1, 3–4 e 13), com melhoras pequenas: de 0,7869 na época 4 para 0,7840 na época 13.
 - **A melhor época pela loss não é a de maior acurácia.** A maior acurácia de validação (73,17%) ocorreu nas épocas 3 e 20, enquanto a época escolhida (13) tem 71,78%. Os dois critérios podem apontar modelos diferentes.
 - A **acurácia de treino é quase constante** (64,2% a 66,0%) e a loss de treino fica em torno de 0,96 desde a época 2. O treino praticamente não evolui.
-- A **acurácia de validação oscila muito**: de 67,20% a 73,17%, amplitude de cerca de 6 p.p., sem tendência de melhora. Ela segue sempre acima da de treino, o que é compatível com o augmentation aplicado só no treino (hipótese).
+- A **acurácia de validação oscila muito**: de 67,20% a 73,17%, amplitude de cerca de 6 p.p., sem tendência de melhora. Ela segue sempre acima da de treino. O augmentation é aplicado só no treino (confirmado na configuração), o que pode contribuir, mas o mesmo ocorre no Teste 1, sem augmentation, então não deve ser a única explicação.
 - **A acurácia global esconde o problema principal.** A acurácia de teste é 72,26%, mas o F1 macro é 0,4822. O desempenho depende fortemente da classe.
 
 **Hipóteses a verificar (não confirmadas pelos dados):**
@@ -197,7 +200,7 @@ Métricas na melhor época (selecionada pela menor loss de validação):
 - Apenas **uma execução** por configuração; não há estimativa de variância.
 - Faltam **matriz de confusão** e **loss de teste**.
 - A seleção da melhor época usa a loss de validação; escolher pela acurácia ou pelo F1 macro levaria a outra época.
-- As transformações exatas do `B_leve` e os hiperparâmetros não estão documentados, o que limita a interpretação.
+- Os hiperparâmetros não estão documentados, o que limita a interpretação.
 - Não está documentado se houve tratamento de desbalanceamento.
 
 ## Próximos passos
@@ -209,7 +212,7 @@ Métricas na melhor época (selecionada pela menor loss de validação):
 - [ ] Considerar **F1 macro** como critério de seleção do modelo ou de early stopping.
 - [ ] Salvar também a curva de loss (treino e validação) junto com a de acurácia.
 - [ ] Repetir com 3 a 5 seeds e reportar média ± desvio-padrão.
-- [ ] Documentar as transformações do `B_leve` e preencher a tabela de reprodutibilidade.
+- [ ] Preencher a tabela de reprodutibilidade.
 
 ## Conclusão
 

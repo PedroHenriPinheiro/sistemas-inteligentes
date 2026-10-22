@@ -38,8 +38,12 @@ Avaliar o desempenho da arquitetura **VGG16** na classificação de sinais de EC
 
 | Transformação | Parâmetros |
 |---|---|
-| _a preencher_ | _a preencher_ |
-| _a preencher_ | _a preencher_ |
+| `Resize` | 224 × 224 |
+| `RandomAffine` | `degrees=0`, `translate=(0.04, 0.04)`, `scale=(0.95, 1.05)`, `fill=(255, 255, 255)` (translação de até 4% e escala de ±5%; áreas novas em branco) |
+| `ColorJitter` | `brightness=0.2`, `contrast=0.2` |
+| `ToTensor` + `Normalize` | média `[0.485, 0.456, 0.406]`, desvio `[0.229, 0.224, 0.225]` |
+
+**Regras adotadas para imagens de ECG (padronizadas na equipe):** sem *flip* horizontal ou vertical (inverteria o tempo e a polaridade das ondas); sem rotações grandes ou recortes agressivos (alterariam derivações e intervalos RR); áreas novas preenchidas com branco; augmentation aplicado **somente no treino**. Validação e teste usam apenas `Resize` + `ToTensor` + `Normalize`.
 
 ### Informações a completar
 
@@ -47,7 +51,6 @@ Avaliar o desempenho da arquitetura **VGG16** na classificação de sinais de EC
 |---|---|
 | Dataset e significado das siglas das classes | _a preencher_ |
 | Tamanho dos conjuntos de treino, validação e teste | _a preencher_ |
-| Tamanho da imagem de entrada | _a preencher_ |
 | Pesos iniciais (ImageNet ou aleatórios) | _a preencher_ |
 | Otimizador e *learning rate* | _a preencher_ |
 | Batch size | _a preencher_ |
@@ -128,7 +131,7 @@ Melhor época: **17**, com a menor loss de validação do experimento. Neste tes
 - A **acurácia de treino estagna em ≈ 63–64%** desde a época 3, com loss de treino em torno de 1,01. O treino quase não evolui.
 - A **acurácia de validação oscila bastante**: de 65,44% a 73,22% (amplitude de ≈ 7,8 p.p., a maior entre os testes com dados completos). A média das 27 épocas é 70,01%.
 - **A melhor época é um pico entre valores instáveis.** Os 73,22% da época 17 ficam cerca de 3 p.p. acima da média das épocas. Por isso, a acurácia da "melhor época" tende a ser mais otimista que o desempenho típico do modelo.
-- A validação fica acima do treino em **todas** as 27 épocas, comportamento compatível com augmentation aplicado só no treino (hipótese).
+- A validação fica acima do treino em **todas** as 27 épocas, O augmentation é aplicado só no treino (confirmado na configuração), o que pode contribuir, mas o mesmo ocorre no Teste 1, sem augmentation, então não deve ser a única explicação.
 
 **Hipóteses a verificar (não confirmadas pelos dados):**
 
@@ -168,7 +171,7 @@ Métricas na melhor época (selecionada pela menor loss de validação):
 - Apenas **uma execução** por configuração; não há estimativa de variância.
 - Faltam **acurácia e loss de teste**, **relatório por classe** e **matriz de confusão** para este teste.
 - A seleção da melhor época usa a loss de validação, e a acurácia dessa época é um pico entre valores muito oscilantes.
-- As transformações do `C_moderado` e os hiperparâmetros não estão documentados.
+- Os hiperparâmetros não estão documentados.
 
 ## Próximos passos
 
@@ -178,7 +181,7 @@ Métricas na melhor época (selecionada pela menor loss de validação):
 - [ ] Testar **pesos de classe**, `WeightedRandomSampler` ou *focal loss* para tratar o desbalanceamento.
 - [ ] Investigar a estagnação do treino (learning rate, camadas congeladas, scheduler).
 - [ ] Repetir com 3 a 5 seeds e reportar média ± desvio-padrão.
-- [ ] Documentar as transformações do `C_moderado` e preencher a tabela de reprodutibilidade.
+- [ ] Preencher a tabela de reprodutibilidade.
 
 ## Conclusão
 

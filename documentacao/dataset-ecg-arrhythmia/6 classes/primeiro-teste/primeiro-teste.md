@@ -31,6 +31,15 @@ Avaliar o desempenho da arquitetura **VGG16** na classificação de sinais de EC
 
 **Classes:** `AF`, `AFIB`, `SA`, `SB`, `SR`, `ST`
 
+### Pré-processamento
+
+Sem augmentation, o treino usa o mesmo pipeline de validação e teste (`transform_avaliacao`), comum a todos os testes da série:
+
+| Transformação | Parâmetros |
+|---|---|
+| `Resize` | 224 × 224 |
+| `ToTensor` + `Normalize` | média `[0.485, 0.456, 0.406]`, desvio `[0.229, 0.224, 0.225]` |
+
 ### Informações a completar
 
 Preencha para tornar o experimento reprodutível:
@@ -39,7 +48,6 @@ Preencha para tornar o experimento reprodutível:
 |---|---|
 | Dataset | _a preencher_ |
 | Divisão treino/validação/teste | _a preencher_ |
-| Tamanho da imagem de entrada | _a preencher_ |
 | Pesos iniciais (ImageNet ou aleatórios) | _a preencher_ |
 | Otimizador e *learning rate* | _a preencher_ |
 | Batch size | _a preencher_ |

@@ -35,8 +35,15 @@ Avaliar o desempenho da arquitetura **VGG16** na classificação de sinais de EC
 
 | Transformação | Parâmetros |
 |---|---|
-| _a preencher_ | _a preencher_ |
-| _a preencher_ | _a preencher_ |
+| `Resize` | 224 × 224 |
+| `RandomAffine` | `degrees=3`, `translate=(0.06, 0.06)`, `scale=(0.90, 1.10)`, `fill=(255, 255, 255)` (rotação de ±3°, translação de até 6% e escala de ±10%; áreas novas em branco) |
+| `ColorJitter` | `brightness=0.3`, `contrast=0.3` |
+| `GaussianBlur` (via `RandomApply`) | `kernel_size=3`, `sigma=(0.1, 1.0)`, `p=0.3` |
+| `ToTensor` | — |
+| `RandomErasing` | `p=0.3`, `scale=(0.01, 0.04)`, `ratio=(0.3, 3.3)`, `value=1.0` (apaga pequenos trechos com branco, simulando ruído/artefatos do traçado) |
+| `Normalize` | média `[0.485, 0.456, 0.406]`, desvio `[0.229, 0.224, 0.225]` |
+
+**Regras adotadas para imagens de ECG (padronizadas na equipe):** sem *flip* horizontal ou vertical (inverteria o tempo e a polaridade das ondas); sem rotações grandes ou recortes agressivos (alterariam derivações e intervalos RR); áreas novas preenchidas com branco; augmentation aplicado **somente no treino**. Validação e teste usam apenas `Resize` + `ToTensor` + `Normalize`.
 
 ### Informações a completar
 
@@ -44,7 +51,6 @@ Avaliar o desempenho da arquitetura **VGG16** na classificação de sinais de EC
 |---|---|
 | Dataset | _a preencher_ |
 | Divisão treino/validação/teste | _a preencher_ |
-| Tamanho da imagem de entrada | _a preencher_ |
 | Pesos iniciais (ImageNet ou aleatórios) | _a preencher_ |
 | Otimizador e *learning rate* | _a preencher_ |
 | Batch size | _a preencher_ |
@@ -96,12 +102,12 @@ Melhor época: **4** (critério: menor `val_loss`, que coincide com a maior `val
 - O melhor resultado ocorre na **época 4** e não é superado nas 10 épocas seguintes. A execução de 14 épocas (4 + 10) é compatível com um *early stopping* com paciência de 10; confirme na sua configuração.
 - A **acurácia de treino estagna em ≈ 60%** a partir da época 3, e a loss de treino fica em torno de 1,10. O treino praticamente não evolui ao longo das épocas.
 - A **acurácia de validação oscila muito** (65,9% a 72,0%, amplitude de ≈ 6,1 p.p.), mais do que no Teste 1.
-- A validação supera o treino em todas as épocas, comportamento esperado quando o augmentation é aplicado apenas ao conjunto de treino, tornando-o mais difícil que a validação.
+- A validação supera o treino em todas as épocas. Isso é compatível com o augmentation ser aplicado apenas ao treino (confirmado na configuração), o que o torna mais difícil que a validação. Como o mesmo ocorre no Teste 1, sem augmentation, essa não deve ser a única explicação.
 - O tempo por época (≈ 4,5 min) é maior que no Teste 1 (≈ 3,5 min), compatível com o custo de aplicar transformações a cada lote.
 
 **Hipóteses a verificar (não confirmadas pelos dados):**
 
-- O augmentation pesado pode estar distorcendo características morfológicas relevantes do ECG (por exemplo, formato e posição de ondas e intervalos), dificultando a aprendizagem das classes.
+- O `D_pesado` combina várias perturbações (escala de ±10%, translação de até 6%, rotação de ±3°, *blur* e apagamento de pequenos trechos). A escala e o apagamento podem alterar ou ocultar morfologia relevante do ECG (formato das ondas, intervalos RR), dificultando a aprendizagem das classes. Testar cada transformação isoladamente (ablação) mostraria qual delas pesa mais.
 - Como o treino já estagnava no Teste 1, o problema pode não ser a falta de variedade de dados, e sim o *setup* de treinamento (learning rate, camadas congeladas, scheduler).
 
 ## Comparação com o Teste 1
@@ -121,12 +127,10 @@ Nestes dois experimentos, o augmentation pesado **não trouxe ganho** nas métri
 - Apenas **uma execução** por configuração; sem repetições não há estimativa de variância.
 - As métricas são de **treino e validação**. Não há resultado em conjunto de teste independente.
 - Só há acurácia global; falta análise **por classe**.
-- As transformações exatas do `D_pesado` não estão documentadas neste README, o que limita a interpretação.
 - A "melhor época" é escolhida com a própria validação, o que pode superestimar o desempenho real.
 
 ## Próximos passos
 
-- [ ] Documentar as transformações e parâmetros do `D_pesado`.
 - [ ] Avaliar o melhor modelo (época 4) em um conjunto de **teste independente**.
 - [ ] Gerar **matriz de confusão** e **precisão, revocação e F1 por classe**.
 - [ ] Repetir com 3 a 5 seeds e reportar média ± desvio-padrão.
