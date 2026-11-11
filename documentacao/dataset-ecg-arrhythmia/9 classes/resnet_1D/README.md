@@ -190,5 +190,5 @@ Para o modelo 1 o código lê o `y_*.npy` de 4 classes. Para os demais, filtra o
 | ST | Taquicardia sinusal |
 | SB | Bradicardia sinusal |
 | SR | Ritmo sinusal |
-| SA | irregularidade sinusal |
+| SA | _(preencher conforme a nomenclatura da base)_ |
 | GSVT | Grupo criado neste projeto: SVT, AT, AVRT e ST |
